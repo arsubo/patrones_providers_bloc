@@ -1,4 +1,6 @@
+import 'package:estados_app/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:estados_app/services/usuario_service.dart';
 
 class Pagina1Page extends StatelessWidget {
   @override
@@ -7,7 +9,16 @@ class Pagina1Page extends StatelessWidget {
       appBar: AppBar(
         title: Text('Pagina1'),
       ),
-      body: InformacionUsuarios(),
+      body: StreamBuilder(
+        stream: usuarioService.usuarioStream,
+        builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
+         return snapshot.hasData
+              ? InformacionUsuarios(usuario: usuarioService.usuario)
+              : Center(
+                  child: Text('No hay informacion del usuario'),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.accessibility_new),
         onPressed: () {
@@ -19,6 +30,10 @@ class Pagina1Page extends StatelessWidget {
 }
 
 class InformacionUsuarios extends StatelessWidget {
+  final Usuario usuario;
+
+  const InformacionUsuarios({this.usuario});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,18 +43,34 @@ class InformacionUsuarios extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-        Text('Genera', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-        Divider(),
-        ListTile( title: Text('Nombre'),),
-        ListTile( title: Text('Edad'),),
-        Divider(),
-         Text('Profesiones', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-        Divider(),
-        ListTile( title: Text('Profesion1'),),
-        ListTile( title: Text('Profesion 2'),),
-        ListTile( title: Text('Profesion 3'),),
-      ],
-     ),
+          Text(
+            'Genera',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Nombre: ${usuario.nombre}'),
+          ),
+          ListTile(
+            title: Text('Edad: ${usuario.edad}'),
+          ),
+          Divider(),
+          Text(
+            'Profesiones',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Profesion1'),
+          ),
+          ListTile(
+            title: Text('Profesion 2'),
+          ),
+          ListTile(
+            title: Text('Profesion 3'),
+          ),
+        ],
+      ),
     );
   }
 }
